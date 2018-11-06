@@ -12,23 +12,14 @@ Imports::
     >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> today = datetime.date.today()
 
-Create database::
+Install stock_number_of_packages Module::
 
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
-Install purchase_lot_cost::
-
-    >>> Module = Model.get('ir.module')
-    >>> modules = Module.find([
-    ...         ('name', '=', 'production_quality_control_trigger_lot'),
-    ...         ])
-    >>> Module.install([x.id for x in modules], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('production_quality_control_trigger_lot')
 
 Create company::
 
@@ -39,14 +30,6 @@ Reload the context::
 
     >>> User = Model.get('res.user')
     >>> config._context = User.get_preferences(True, config.context)
-
-Configuration production location::
-
-    >>> Location = Model.get('stock.location')
-    >>> warehouse, = Location.find([('code', '=', 'WH')])
-    >>> production_location, = Location.find([('code', '=', 'PROD')])
-    >>> warehouse.production_location = production_location
-    >>> warehouse.save()
 
 Create products::
 
@@ -60,9 +43,10 @@ Create products::
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal('20')
-    >>> template1.cost_price = Decimal('8')
+    >>> template1.producible = True
     >>> template1.save()
     >>> product1.template = template1
+    >>> product1.cost_price = Decimal('8')
     >>> product1.save()
     >>> product2 = Product()
     >>> template2 = ProductTemplate()
@@ -70,9 +54,10 @@ Create products::
     >>> template2.default_uom = unit
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal('20')
-    >>> template2.cost_price = Decimal('8')
+    >>> template2.producible = True
     >>> template2.save()
     >>> product2.template = template2
+    >>> product2.cost_price = Decimal('8')
     >>> product2.save()
 
 Create Components::
@@ -83,9 +68,9 @@ Create Components::
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal(5)
-    >>> template1.cost_price = Decimal(1)
     >>> template1.save()
     >>> component1.template = template1
+    >>> component1.cost_price = Decimal(1)
     >>> component1.save()
 
     >>> meter, = ProductUom.find([('name', '=', 'Meter')])
@@ -96,9 +81,9 @@ Create Components::
     >>> template2.default_uom = meter
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal(7)
-    >>> template2.cost_price = Decimal(5)
     >>> template2.save()
     >>> component2.template = template2
+    >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
 Create Bill of Material::
@@ -168,6 +153,7 @@ Create an Inventory for components::
 
     >>> Inventory = Model.get('stock.inventory')
     >>> InventoryLine = Model.get('stock.inventory.line')
+    >>> Location = Model.get('stock.location')
     >>> storage, = Location.find([
     ...         ('code', '=', 'STO'),
     ...         ])

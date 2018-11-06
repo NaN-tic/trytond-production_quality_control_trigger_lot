@@ -2,14 +2,14 @@
 # copyright notices and license terms.
 from trytond.pool import PoolMeta
 
-from trytond.modules.quality_control_trigger import QualityControlTriggerMixin
+from trytond.modules.quality_control_trigger.quality import QualityControlTriggerMixin
 
 __all__ = ['QualityTemplate', 'Production']
-__metaclass__ = PoolMeta
 
 
 class QualityTemplate:
     __name__ = 'quality.template'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def _get_trigger_generation_models_by_trigger_models(cls):
