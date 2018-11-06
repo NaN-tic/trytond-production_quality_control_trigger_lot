@@ -170,7 +170,7 @@ Create an Inventory for components::
     >>> inventory.save()
     >>> Inventory.confirm([inventory.id], config.context)
     >>> inventory.state
-    u'done'
+    'done'
 
 Create a production and set to waiting and then try to assign::
 
@@ -184,7 +184,7 @@ Create a production and set to waiting and then try to assign::
     >>> production.save()
     >>> Production.wait([production.id], config.context)
     >>> production.state
-    u'waiting'
+    'waiting'
     >>> Production.assign_try([production.id], config.context)
     True
     >>> production.reload()

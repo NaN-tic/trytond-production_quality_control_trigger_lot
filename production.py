@@ -7,9 +7,8 @@ from trytond.modules.quality_control_trigger.quality import QualityControlTrigge
 __all__ = ['QualityTemplate', 'Production']
 
 
-class QualityTemplate:
+class QualityTemplate(metaclass=PoolMeta):
     __name__ = 'quality.template'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def _get_trigger_generation_models_by_trigger_models(cls):
@@ -21,8 +20,7 @@ class QualityTemplate:
         return models
 
 
-class Production(QualityControlTriggerMixin):
-    __metaclass__ = PoolMeta
+class Production(QualityControlTriggerMixin, metaclass=PoolMeta):
     __name__ = 'production'
 
     @classmethod
